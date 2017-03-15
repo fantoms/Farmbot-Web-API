@@ -13,6 +13,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rspec/rails'
 require_relative './stuff'
+require_relative './doc_gen'
 
 Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
@@ -27,7 +28,8 @@ DatabaseCleaner.strategy = :truncation
 DatabaseCleaner.clean
 
 RSpec.configure do |config|
-
+  config.color = true
+  config.fail_fast = 1
   config.backtrace_exclusion_patterns = [/gems/]
 
   config.include Helpers
@@ -36,15 +38,20 @@ RSpec.configure do |config|
 
   if ENV['DOCS']
     config.after(:each, type: :controller) do
+      DocGen.add(request)
       SmarfDoc.run!(request, response)
     end
 
     config.after(:suite) do
+      DocGen.finish!
       SmarfDoc.finish!
     end
   end
 end
 
-# class Stub
-#   def initialize(response)
-# end
+# Reassign constants without getting a bunch of warnings to STDOUT.
+# This is just for testing purposes, so NBD.
+def const_reassign(target, const, value)
+  target.send(:remove_const, const)
+  target.const_set(const, value)
+end

@@ -8,7 +8,6 @@ gem "devise"
 gem "jwt"
 gem "mutations", "~> 0.8.0"
 gem "active_model_serializers", "~> 0.8.3"
-gem "ice_cube"
 gem "rack-cors"
 gem "database_cleaner"
 gem "rack-attack"
@@ -19,6 +18,7 @@ gem "fog-google", git: "https://github.com/fog/fog-google"
 gem "rest-client" # If you see this, delete this.
 gem "pg"
 gem "batch_api"
+gem "json-schema-generator"
 
 # Error reporting tools.
 # Active on the "official" FarmBot server, set the appropriate ENV
